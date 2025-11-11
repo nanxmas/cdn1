@@ -21,6 +21,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # 增加缓冲区大小，避免大文件推送失败
+          git config http.postBuffer 524288000
+          git config http.version HTTP/1.1
       
       - name: 克隆源仓库
         run: |
@@ -37,9 +40,10 @@ jobs:
           echo "=========================================="
           
           SOURCE_DIR="/tmp/source/pic/data"
-          HAS_UPDATES=false
+          BATCH_SIZE=50  # 每批处理50个ID
+          COMMIT_COUNT=0
           
-          # 遍历ID 1-700
+          # 遍历ID 1-700，分批提交
           for id in $(seq 1 700); do
             if [ -d "$SOURCE_DIR/$id" ]; then
               echo "📦 处理动漫ID: $id"
@@ -49,13 +53,43 @@ jobs:
                 # 创建目标目录
                 mkdir -p "$id"
                 
-                # 使用rsync同步整个目录（保留结构，只更新变化的文件）
+                # 使用rsync同步整个目录
                 rsync -av --delete "$SOURCE_DIR/$id/" "$id/"
                 
                 # 检查是否有变化
                 if git status --porcelain | grep -q "^"; then
-                  HAS_UPDATES=true
                   echo "  ✓ ID $id 已更新"
+                  COMMIT_COUNT=$((COMMIT_COUNT + 1))
+                  
+                  # 每处理BATCH_SIZE个有变化的ID就提交一次
+                  if [ $((COMMIT_COUNT % BATCH_SIZE)) -eq 0 ]; then
+                    echo "=========================================="
+                    echo "📤 提交批次 (已处理 $COMMIT_COUNT 个更新)"
+                    git add .
+                    if ! git diff --cached --quiet; then
+                      git commit -m "自动同步: 批量更新动漫数据 (进度: ID $id) - $(date +'%Y-%m-%d %H:%M:%S')"
+                      
+                      # 推送并重试机制
+                      MAX_RETRIES=3
+                      RETRY_COUNT=0
+                      while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+                        if git push; then
+                          echo "✅ 批次推送成功"
+                          break
+                        else
+                          RETRY_COUNT=$((RETRY_COUNT + 1))
+                          if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                            echo "⚠️ 推送失败，等待 10 秒后重试 ($RETRY_COUNT/$MAX_RETRIES)..."
+                            sleep 10
+                          else
+                            echo "❌ 推送失败，已达最大重试次数"
+                            exit 1
+                          fi
+                        fi
+                      done
+                    fi
+                    echo "=========================================="
+                  fi
                 else
                   echo "  → ID $id 无变化"
                 fi
@@ -67,18 +101,31 @@ jobs:
           
           echo "=========================================="
           
-          # 如果有更新，提交变更
-          if [ "$HAS_UPDATES" = true ]; then
-            echo "检测到更新，准备提交..."
+          # 提交剩余的变更
+          if git status --porcelain | grep -q "^"; then
+            echo "📤 提交最后一批更新..."
             git add .
-            
-            # 检查是否真的有变化需要提交
-            if git diff --cached --quiet; then
-              echo "ℹ️ 没有实际变化需要提交"
-            else
-              git commit -m "自动同步: 更新动漫数据 (ID 1-700) - $(date +'%Y-%m-%d %H:%M:%S')"
-              git push
-              echo "✅ 同步完成并已推送"
+            if ! git diff --cached --quiet; then
+              git commit -m "自动同步: 完成动漫数据更新 (ID 1-700) - $(date +'%Y-%m-%d %H:%M:%S')"
+              
+              # 推送并重试
+              MAX_RETRIES=3
+              RETRY_COUNT=0
+              while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+                if git push; then
+                  echo "✅ 最终推送成功"
+                  break
+                else
+                  RETRY_COUNT=$((RETRY_COUNT + 1))
+                  if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                    echo "⚠️ 推送失败，等待 10 秒后重试 ($RETRY_COUNT/$MAX_RETRIES)..."
+                    sleep 10
+                  else
+                    echo "❌ 推送失败，已达最大重试次数"
+                    exit 1
+                  fi
+                fi
+              done
             fi
           else
             echo "ℹ️ 没有检测到更新"
