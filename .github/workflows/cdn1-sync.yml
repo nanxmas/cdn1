@@ -22,135 +22,73 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       
-      - name: 安装依赖
+      - name: 克隆源仓库
         run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
+          echo "克隆源仓库..."
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/Sukiing-make-org/MYLAND66.github.io.git /tmp/source
+          cd /tmp/source
+          git sparse-checkout set pic/data
+          echo "✅ 源仓库克隆完成"
       
       - name: 同步动漫数据 (ID 1-700)
         run: |
-          echo "开始同步 CDN1 数据 (动漫ID 1-700)..."
+          echo "=========================================="
+          echo "开始同步 CDN1 数据 (动漫ID 1-700)"
+          echo "=========================================="
           
-          # 源仓库基础URL
-          SOURCE_BASE="https://raw.githubusercontent.com/Sukiing-make-org/MYLAND66.github.io/refs/heads/main/pic/data"
-          
-          # 用于追踪是否有更新
+          SOURCE_DIR="/tmp/source/pic/data"
           HAS_UPDATES=false
           
           # 遍历ID 1-700
           for id in $(seq 1 700); do
-            echo "=========================================="
-            echo "检查动漫ID: $id"
-            
-            SOURCE_DIR="$SOURCE_BASE/$id"
-            
-            # 先检查该ID是否存在JSON文件
-            if curl --output /dev/null --silent --head --fail "$SOURCE_DIR/$id.json"; then
-              echo "✓ 发现动漫ID $id 存在于源仓库"
+            if [ -d "$SOURCE_DIR/$id" ]; then
+              echo "📦 处理动漫ID: $id"
               
-              # 创建本地目标目录
-              mkdir -p "$id"
-              
-              # 下载并检查JSON文件
-              echo "检查JSON文件..."
-              curl -sL "$SOURCE_DIR/$id.json" -o "/tmp/${id}.json.new"
-              
-              if [ -f "$id/$id.json" ]; then
-                if ! cmp -s "/tmp/${id}.json.new" "$id/$id.json"; then
-                  echo "  → JSON文件有更新"
-                  cp "/tmp/${id}.json.new" "$id/$id.json"
+              # 检查源目录中是否有文件
+              if [ "$(ls -A $SOURCE_DIR/$id 2>/dev/null)" ]; then
+                # 创建目标目录
+                mkdir -p "$id"
+                
+                # 使用rsync同步整个目录（保留结构，只更新变化的文件）
+                rsync -av --delete "$SOURCE_DIR/$id/" "$id/"
+                
+                # 检查是否有变化
+                if git status --porcelain | grep -q "^"; then
                   HAS_UPDATES=true
+                  echo "  ✓ ID $id 已更新"
                 else
-                  echo "  → JSON文件无变化"
+                  echo "  → ID $id 无变化"
                 fi
               else
-                echo "  → 首次下载JSON文件"
-                cp "/tmp/${id}.json.new" "$id/$id.json"
-                HAS_UPDATES=true
+                echo "  ✗ ID $id 目录为空，跳过"
               fi
-              
-              # 检查images目录下的所有图片
-              echo "检查images目录..."
-              mkdir -p "$id/images"
-              
-              # 从JSON中解析图片列表
-              if [ -f "$id/$id.json" ]; then
-                # 尝试从JSON提取图片文件名
-                IMAGES=$(jq -r '.images[]? // empty' "$id/$id.json" 2>/dev/null || echo "")
-                
-                if [ ! -z "$IMAGES" ]; then
-                  echo "  从JSON中找到图片列表"
-                  echo "$IMAGES" | while read -r img_filename; do
-                    if [ ! -z "$img_filename" ]; then
-                      # 检查源仓库中是否存在该图片
-                      IMG_URL="$SOURCE_DIR/images/$img_filename"
-                      if curl --output /dev/null --silent --head --fail "$IMG_URL"; then
-                        # 下载图片到临时文件
-                        curl -sL "$IMG_URL" -o "/tmp/${img_filename}.new"
-                        
-                        # 检查图片是否有变化
-                        if [ -f "$id/images/$img_filename" ]; then
-                          if ! cmp -s "/tmp/${img_filename}.new" "$id/images/$img_filename"; then
-                            echo "  → 更新图片: $img_filename"
-                            cp "/tmp/${img_filename}.new" "$id/images/$img_filename"
-                            HAS_UPDATES=true
-                          fi
-                        else
-                          echo "  → 新增图片: $img_filename"
-                          cp "/tmp/${img_filename}.new" "$id/images/$img_filename"
-                          HAS_UPDATES=true
-                        fi
-                        
-                        rm -f "/tmp/${img_filename}.new"
-                      fi
-                    fi
-                  done
-                fi
-              fi
-              
-              # 同时检查常见的图片文件（封面等）
-              for img in cover.jpg cover.png cover.webp; do
-                IMG_URL="$SOURCE_DIR/images/$img"
-                if curl --output /dev/null --silent --head --fail "$IMG_URL"; then
-                  curl -sL "$IMG_URL" -o "/tmp/${img}.new"
-                  
-                  if [ -f "$id/images/$img" ]; then
-                    if ! cmp -s "/tmp/${img}.new" "$id/images/$img"; then
-                      echo "  → 更新封面: $img"
-                      cp "/tmp/${img}.new" "$id/images/$img"
-                      HAS_UPDATES=true
-                    fi
-                  else
-                    echo "  → 新增封面: $img"
-                    cp "/tmp/${img}.new" "$id/images/$img"
-                    HAS_UPDATES=true
-                  fi
-                  
-                  rm -f "/tmp/${img}.new"
-                fi
-              done
-              
-              rm -f "/tmp/${id}.json.new"
-            else
-              echo "✗ 动漫ID $id 不存在，跳过"
             fi
           done
           
-          # 清理临时文件
-          rm -rf /tmp/*.new
+          echo "=========================================="
           
           # 如果有更新，提交变更
           if [ "$HAS_UPDATES" = true ]; then
-            echo "=========================================="
             echo "检测到更新，准备提交..."
             git add .
-            git commit -m "自动同步: 更新动漫数据 (ID 1-700) - $(date +'%Y-%m-%d %H:%M:%S')"
-            git push
-            echo "✅ 同步完成并已推送"
+            
+            # 检查是否真的有变化需要提交
+            if git diff --cached --quiet; then
+              echo "ℹ️ 没有实际变化需要提交"
+            else
+              git commit -m "自动同步: 更新动漫数据 (ID 1-700) - $(date +'%Y-%m-%d %H:%M:%S')"
+              git push
+              echo "✅ 同步完成并已推送"
+            fi
           else
-            echo "=========================================="
             echo "ℹ️ 没有检测到更新"
           fi
+      
+      - name: 清理
+        if: always()
+        run: |
+          rm -rf /tmp/source
+          echo "✅ 临时文件已清理"
       
       - name: 同步结果
         if: always()
