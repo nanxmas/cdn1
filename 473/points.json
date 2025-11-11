@@ -1,0 +1,318 @@
+[
+  {
+    "id": "51i53qvse",
+    "name": "多摩動物公園 サーバルキャット舎",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qvse-1673608607240.jpg",
+    "ep": 1,
+    "s": 574,
+    "geo": [
+      35.6527,
+      139.4033
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.652702%2C139.403373&z=17"
+  },
+  {
+    "id": "51i53qwfw",
+    "name": "天王寺動物園 ジャガー舎",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qwfw-1673608704156.jpg",
+    "ep": 2,
+    "s": 1412,
+    "geo": [
+      34.6536,
+      135.5087
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=34.653664%2C135.508775&z=17"
+  },
+  {
+    "id": "51i53qwd1",
+    "name": "東武動物公園 小動物舎（コツメカワウソ）",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qwd1-1673608732456.jpg",
+    "ep": 2,
+    "s": 755,
+    "geo": [
+      36.0227,
+      139.7101
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=36.022701%2C139.710109&z=17"
+  },
+  {
+    "id": "51i53qxp3",
+    "name": "佐渡市トキの森公園",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qxp3-1673608775621.jpg",
+    "ep": 3,
+    "s": 636,
+    "geo": [
+      38.0371,
+      138.421
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=38.037187%2C138.42104&z=17"
+  },
+  {
+    "id": "51i53qygl",
+    "name": "那須アルパカ牧場",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qygl-1673608814410.jpg",
+    "ep": 3,
+    "s": 657,
+    "geo": [
+      37.1262,
+      140.0473
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=37.126244%2C140.047327&z=17"
+  },
+  {
+    "id": "51i53qy96",
+    "name": "東武動物公園 アメリカビーバー舎",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qy96-1673608869358.jpg",
+    "ep": 5,
+    "s": 585,
+    "geo": [
+      36.0227,
+      139.7083
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=36.022785%2C139.708355&z=17"
+  },
+  {
+    "id": "51i53qyco",
+    "name": "江戸川区自然動物園 オグロプレーリードッグ舎",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qyco-1673608876304.jpg",
+    "ep": 5,
+    "s": 624,
+    "geo": [
+      35.6709,
+      139.8584
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.670955%2C139.858438&z=17"
+  },
+  {
+    "id": "51i53qzzo",
+    "name": "東武動物公園 ライオン舎",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qzzo-1673608925410.jpg",
+    "ep": 6,
+    "s": 765,
+    "geo": [
+      36.0225,
+      139.7096
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=36.022552%2C139.709685&z=17"
+  },
+  {
+    "id": "51i53qzmn",
+    "name": "夢見ヶ崎動物公園 ラマ舎（旧ヘラジカ舎）",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qzmn-1673608934268.jpg",
+    "ep": 6,
+    "s": 804,
+    "geo": [
+      35.5498,
+      139.6647
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.549806%2C139.664706&z=17"
+  },
+  {
+    "id": "51i53qzo7",
+    "name": "東武動物公園 シロフクロウ舎",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53qzo7-1673611215034.jpg",
+    "ep": 7,
+    "s": 608,
+    "geo": [
+      36.0233,
+      139.7061
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=36.02338%2C139.706164&z=17"
+  },
+  {
+    "id": "51i53r09q",
+    "name": "いけふくろうカフェ",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r09q-1673611198443.jpg",
+    "ep": 7,
+    "s": 638,
+    "geo": [
+      35.7269,
+      139.7115
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.726918%2C139.711586&z=17"
+  },
+  {
+    "id": "51i53r09v",
+    "name": "名古屋港水族館",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r09v-1673611259657.jpg",
+    "ep": 8,
+    "s": 528,
+    "geo": [
+      35.0906,
+      136.8781
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.090632%2C136.878142&z=17"
+  },
+  {
+    "id": "51i53r12d",
+    "name": "宮城蔵王キツネ村",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r12d-1673611306125.jpg",
+    "ep": 9,
+    "s": 703,
+    "geo": [
+      38.0408,
+      140.5303
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=38.040859%2C140.530372&z=17"
+  },
+  {
+    "id": "51i53r1gi",
+    "name": "キリンのオウチ",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r1gi-1673611363895.jpg",
+    "ep": 10,
+    "s": 548,
+    "geo": [
+      36.0205,
+      139.7098
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=36.020572%2C139.709897&z=17"
+  },
+  {
+    "id": "51i53r0w8",
+    "name": "ヒグマの森",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r0w8-1673611416724.jpg",
+    "ep": 11,
+    "s": 313,
+    "geo": [
+      36.0222,
+      139.7087
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=36.022206%2C139.708733&z=17"
+  },
+  {
+    "id": "51i53r2nh",
+    "name": "府中競馬正門前駅 連絡橋",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r2nh_1753091843469.jpg",
+    "geo": [
+      35.666,
+      139.4846
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.666039%2C139.484621&z=17"
+  },
+  {
+    "id": "51i53r3sy",
+    "name": "3Fスタンド入口",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r3sy_1753092158284.jpg",
+    "geo": [
+      35.6654,
+      139.4846
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.665473%2C139.484632&z=17"
+  },
+  {
+    "id": "51i53r39i",
+    "name": "馬モニュメント",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r39i_1753092233550.jpg",
+    "geo": [
+      35.6652,
+      139.4849
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.665264%2C139.484927&z=17"
+  },
+  {
+    "id": "51i53r3ia",
+    "name": "3Fフロア",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r3ia_1753092205628.jpg",
+    "geo": [
+      35.6653,
+      139.4839
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.665368%2C139.483999&z=17"
+  },
+  {
+    "id": "51i53r389",
+    "name": "ウエストホール",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r389_1753092519069.jpg",
+    "geo": [
+      35.665,
+      139.4836
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.66507%2C139.483699&z=17"
+  },
+  {
+    "id": "lqfm212th",
+    "name": "1F パドック",
+    "image": "https://image.xinu.ink/pic/data/473/images/lqfm212th_1753092187998.jpg",
+    "geo": [
+      35.6655,
+      139.483
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.665551%2C139.483012&z=17"
+  },
+  {
+    "id": "51i53r36w",
+    "name": "日吉が丘公園",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r36w_1753092256943.jpg",
+    "geo": [
+      35.6653,
+      139.4883
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.665377%2C139.488301&z=17"
+  },
+  {
+    "id": "51i53r3w1",
+    "name": "乗馬センター",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r3w1_1753092305086.jpg",
+    "geo": [
+      35.6645,
+      139.4899
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.664575%2C139.489943&z=17"
+  },
+  {
+    "id": "51i53r3c3",
+    "name": "東京競馬場コース",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r3c3_1753092445061.jpg",
+    "geo": [
+      35.6643,
+      139.4837
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.664322%2C139.483731&z=17"
+  },
+  {
+    "id": "51i53r4kj",
+    "name": "さいたまスーパーアリーナ",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r4kj_1753092451509.jpg",
+    "geo": [
+      35.8947,
+      139.6308
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.894761%2C139.630823&z=17"
+  },
+  {
+    "id": "51i53r42y",
+    "name": "さいたまスーパーアリーナ Aゲート",
+    "image": "https://image.xinu.ink/pic/data/473/images/51i53r42y_1753092459669.jpg",
+    "geo": [
+      35.8941,
+      139.6303
+    ],
+    "origin": "Google Maps",
+    "originURL": "https://www.google.com/maps/d/viewer?mid=166LgiTupEBfRI17zldZsTDT6gjs&ll=35.894196%2C139.630373&z=17"
+  }
+]
