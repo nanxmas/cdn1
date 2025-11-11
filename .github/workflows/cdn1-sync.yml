@@ -22,91 +22,141 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       
+      - name: 安装依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+      
       - name: 同步动漫数据 (ID 1-700)
         run: |
           echo "开始同步 CDN1 数据 (动漫ID 1-700)..."
           
-          # 源仓库URL
-          SOURCE_REPO="https://raw.githubusercontent.com/Sukiing-make-org/MYLAND66.github.io/refs/heads/main"
-          
-          # 创建临时目录
-          mkdir -p temp_download
+          # 源仓库基础URL
+          SOURCE_BASE="https://raw.githubusercontent.com/Sukiing-make-org/MYLAND66.github.io/refs/heads/main/pic/data"
           
           # 用于追踪是否有更新
           HAS_UPDATES=false
           
           # 遍历ID 1-700
           for id in $(seq 1 700); do
+            echo "=========================================="
             echo "检查动漫ID: $id"
             
-            # 检查远程是否存在该ID的JSON文件
-            if curl --output /dev/null --silent --head --fail "$SOURCE_REPO/$id/$id.json"; then
-              echo "发现动漫ID $id 存在于源仓库"
+            SOURCE_DIR="$SOURCE_BASE/$id"
+            
+            # 先检查该ID是否存在JSON文件
+            if curl --output /dev/null --silent --head --fail "$SOURCE_DIR/$id.json"; then
+              echo "✓ 发现动漫ID $id 存在于源仓库"
               
-              # 创建目标目录
+              # 创建本地目标目录
               mkdir -p "$id"
               
-              # 下载JSON文件
-              echo "下载 $id.json..."
-              if curl -sL "$SOURCE_REPO/$id/$id.json" -o "temp_download/${id}.json"; then
-                # 检查JSON是否有变化
-                if [ ! -f "$id/$id.json" ] || ! cmp -s "temp_download/${id}.json" "$id/$id.json"; then
-                  echo "JSON文件有更新，复制到目标目录"
-                  cp "temp_download/${id}.json" "$id/$id.json"
+              # 下载并检查JSON文件
+              echo "检查JSON文件..."
+              curl -sL "$SOURCE_DIR/$id.json" -o "/tmp/${id}.json.new"
+              
+              if [ -f "$id/$id.json" ]; then
+                if ! cmp -s "/tmp/${id}.json.new" "$id/$id.json"; then
+                  echo "  → JSON文件有更新"
+                  cp "/tmp/${id}.json.new" "$id/$id.json"
                   HAS_UPDATES=true
-                  
-                  # 下载该ID目录下的所有图片
-                  echo "检查并下载图片..."
-                  
-                  # 尝试下载常见的图片文件
-                  for img in cover.jpg cover.png cover.webp 1.jpg 2.jpg 3.jpg 4.jpg 5.jpg 6.jpg 7.jpg 8.jpg 9.jpg 10.jpg; do
-                    if curl --output /dev/null --silent --head --fail "$SOURCE_REPO/$id/$img"; then
-                      echo "下载图片: $img"
-                      curl -sL "$SOURCE_REPO/$id/$img" -o "$id/$img"
-                    fi
-                  done
-                  
-                  # 从JSON文件中解析图片列表（如果有的话）
-                  if command -v jq &> /dev/null; then
-                    # 尝试从JSON中提取图片列表
-                    IMAGES=$(jq -r '.images[]? // empty' "$id/$id.json" 2>/dev/null || echo "")
-                    if [ ! -z "$IMAGES" ]; then
-                      echo "$IMAGES" | while read -r img_name; do
-                        if [ ! -z "$img_name" ]; then
-                          if curl --output /dev/null --silent --head --fail "$SOURCE_REPO/$id/$img_name"; then
-                            echo "从JSON下载图片: $img_name"
-                            curl -sL "$SOURCE_REPO/$id/$img_name" -o "$id/$img_name"
-                          fi
-                        fi
-                      done
-                    fi
-                  fi
                 else
-                  echo "JSON文件无变化，跳过"
+                  echo "  → JSON文件无变化"
                 fi
               else
-                echo "下载 $id.json 失败"
+                echo "  → 首次下载JSON文件"
+                cp "/tmp/${id}.json.new" "$id/$id.json"
+                HAS_UPDATES=true
               fi
+              
+              # 检查images目录下的所有图片
+              echo "检查images目录..."
+              mkdir -p "$id/images"
+              
+              # 从JSON中解析图片列表
+              if [ -f "$id/$id.json" ]; then
+                # 尝试从JSON提取图片文件名
+                IMAGES=$(jq -r '.images[]? // empty' "$id/$id.json" 2>/dev/null || echo "")
+                
+                if [ ! -z "$IMAGES" ]; then
+                  echo "  从JSON中找到图片列表"
+                  echo "$IMAGES" | while read -r img_filename; do
+                    if [ ! -z "$img_filename" ]; then
+                      # 检查源仓库中是否存在该图片
+                      IMG_URL="$SOURCE_DIR/images/$img_filename"
+                      if curl --output /dev/null --silent --head --fail "$IMG_URL"; then
+                        # 下载图片到临时文件
+                        curl -sL "$IMG_URL" -o "/tmp/${img_filename}.new"
+                        
+                        # 检查图片是否有变化
+                        if [ -f "$id/images/$img_filename" ]; then
+                          if ! cmp -s "/tmp/${img_filename}.new" "$id/images/$img_filename"; then
+                            echo "  → 更新图片: $img_filename"
+                            cp "/tmp/${img_filename}.new" "$id/images/$img_filename"
+                            HAS_UPDATES=true
+                          fi
+                        else
+                          echo "  → 新增图片: $img_filename"
+                          cp "/tmp/${img_filename}.new" "$id/images/$img_filename"
+                          HAS_UPDATES=true
+                        fi
+                        
+                        rm -f "/tmp/${img_filename}.new"
+                      fi
+                    fi
+                  done
+                fi
+              fi
+              
+              # 同时检查常见的图片文件（封面等）
+              for img in cover.jpg cover.png cover.webp; do
+                IMG_URL="$SOURCE_DIR/images/$img"
+                if curl --output /dev/null --silent --head --fail "$IMG_URL"; then
+                  curl -sL "$IMG_URL" -o "/tmp/${img}.new"
+                  
+                  if [ -f "$id/images/$img" ]; then
+                    if ! cmp -s "/tmp/${img}.new" "$id/images/$img"; then
+                      echo "  → 更新封面: $img"
+                      cp "/tmp/${img}.new" "$id/images/$img"
+                      HAS_UPDATES=true
+                    fi
+                  else
+                    echo "  → 新增封面: $img"
+                    cp "/tmp/${img}.new" "$id/images/$img"
+                    HAS_UPDATES=true
+                  fi
+                  
+                  rm -f "/tmp/${img}.new"
+                fi
+              done
+              
+              rm -f "/tmp/${id}.json.new"
+            else
+              echo "✗ 动漫ID $id 不存在，跳过"
             fi
           done
           
           # 清理临时文件
-          rm -rf temp_download
+          rm -rf /tmp/*.new
           
           # 如果有更新，提交变更
           if [ "$HAS_UPDATES" = true ]; then
+            echo "=========================================="
             echo "检测到更新，准备提交..."
             git add .
             git commit -m "自动同步: 更新动漫数据 (ID 1-700) - $(date +'%Y-%m-%d %H:%M:%S')"
             git push
             echo "✅ 同步完成并已推送"
           else
+            echo "=========================================="
             echo "ℹ️ 没有检测到更新"
           fi
       
       - name: 同步结果
         if: always()
         run: |
+          echo "=========================================="
           echo "CDN1 同步任务完成"
           echo "覆盖范围: 动漫ID 1-700"
           echo "执行时间: $(date +'%Y-%m-%d %H:%M:%S')"
+          echo "=========================================="
